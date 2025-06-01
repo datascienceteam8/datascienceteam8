@@ -1,0 +1,299 @@
+---
+
+**Slide 1: Team Introduction & Main Page**
+
+Hello, we are Team 8, StrokeSight.
+Our project aims to predict stroke early and group individuals with similar health characteristics to propose customized prevention strategies.
+Let us introduce our project.
+
+---
+
+**Slide 2: Contents**
+
+Our presentation is divided into six stages.
+We will start with the project background and objectives, introduce the dataset, cover preprocessing, KMeans clustering, prediction using XGBoost and Decision Tree, cluster-specific strategy proposals, and finish with reflections.
+
+---
+
+**Slide 3: Transition Slide**
+
+---
+
+**Slide 4: Project Objective - Motivation**
+
+Stroke causes serious disabilities and the number of stroke patients in Korea has steadily increased over the past 20 years, now exceeding 250,000.
+Early risk prediction and preparation are very important.
+
+---
+
+**Slide 5: Project Objectives**
+
+We have four main goals:
+
+1. Predict stroke risk
+2. Cluster people with similar health traits
+3. Propose tailored prevention strategies for each cluster
+4. Implement practical health prediction services
+
+---
+
+**Slide 6: Transition Slide**
+
+---
+
+**Slide 7: Data Overview & Exploration 1**
+
+We used the publicly available Kaggle ‘Stroke Prediction Dataset’.
+It contains health information for over 5,000 people and is designed for stroke prediction.
+The dataset is suitable for medical and machine learning analysis.
+
+---
+
+**Slide 8: Data Overview & Exploration 2**
+
+The images here visualize the main variables of the original dataset.
+Numerical variables such as age, glucose, and BMI well reflect individual health status.
+Categorical variables like smoking status and work type represent lifestyle and social environment.
+
+There are some missing values, especially in BMI.
+Variables such as gender, hypertension, and heart disease are binary.
+The target variable ‘stroke’ is included for prediction.
+These variables will be critical for preprocessing and modeling.
+
+---
+
+**Slide 9: Data Inspection**
+
+We first separated the ‘stroke’ column as the target variable.
+We divided numerical variables like age and BMI, and categorical variables like occupation and smoking status, organizing them systematically.
+
+Age was not treated as a simple continuous variable; instead, it was grouped into ‘Child’, ‘Adult’, and ‘Senior’ to create a derived feature ‘age\_group’.
+Categorical variables had whitespace trimmed, and binary variables such as gender or marital status were encoded as 0 or 1 for easier model interpretation.
+These preprocessing steps improved data consistency and model learning performance.
+
+---
+
+**Slide 10: Correlation Analysis**
+
+Using the preprocessed data, we analyzed correlations between each variable and stroke occurrence.
+The heatmap shows that the ‘Senior’ age group, hypertension, and heart disease have the strongest positive correlation with stroke.
+This means older people with underlying health conditions have a higher risk of stroke, consistent with medical knowledge.
+These insights were key in selecting important features for model design.
+
+---
+
+**Slide 11: Transition Slide**
+
+---
+
+**Slide 12: Data Preprocessing Overview**
+
+This table summarizes the data structure after preprocessing.
+The original 5,110 samples with 12 columns expanded to 20 features: 3 numerical, 12 one-hot encoded categorical, and 5 binary variables.
+Samples were split into 4,088 for training and 1,022 for testing, creating a stable input structure.
+
+---
+
+**Slide 13: Preprocessing Pipeline & Cleaning**
+
+On the left, the stepwise data cleaning process is shown; on the right, the actual Python pipeline code is visualized.
+We removed the ID column, which was irrelevant.
+String variables were trimmed and normalized for encoding efficiency.
+BMI missing values were imputed with the median to reduce outlier effects.
+Numerical features were scaled, categorical features one-hot encoded, and binary variables passed through unchanged.
+The final dataset contains 20 features.
+
+---
+
+**Slide 14: Feature Engineering & Column Partition**
+
+The final features were categorized by type and the applied transformations summarized.
+Three numeric features were scaled with StandardScaler; 12 categorical features were one-hot encoded.
+Five binary features, like gender and hypertension, remained unchanged.
+Thus, a total of 20 features were prepared for modeling.
+
+---
+
+**Slide 15: Final Feature List**
+
+Here are the final 20 input features.
+Numerical variables were normalized, categoricals one-hot encoded, and binary variables numerically encoded.
+The target variable ‘stroke’ is binary, with 1 indicating stroke occurrence and 0 otherwise.
+
+---
+
+**Slide 16: Preprocessing Validation & Summary**
+
+Post-processing, data split into 4,088 training and 1,022 testing samples, each with 20 stable features.
+One-hot encoding correctness was verified, and numeric feature distributions were similar between train and test sets.
+Feature ordering was fixed to ensure reproducibility.
+Data is ready for model training.
+
+---
+
+**Slide 17: Transition Slide**
+
+---
+
+**Slide 18: Clustering Analysis – KMeans Overview**
+
+We performed KMeans clustering with different values of k, measuring WCSS and Silhouette Scores.
+Both Elbow Method and Silhouette Score indicated k=4 as the optimal number of clusters.
+This choice was used for further analysis and strategy formulation.
+More details are discussed in the evaluation section (slide 32).
+
+---
+
+**Slide 19: Clustering – PCA & Feature Visualization**
+
+Cluster stability was compared between max\_iter=100 and max\_iter=300.
+At 100 iterations, cluster boundaries were unclear; at 300, centers stabilized with distinct clusters.
+Clusters mainly separated by age, with higher age and BMI correlating with increased stroke risk.
+Some health factors were not captured, which limits analysis.
+
+---
+
+**Slide 20: Clustering – Feature Summary & Risk Analysis**
+
+Using PCA, high-dimensional data was reduced to two dimensions for better visualization and cluster differentiation.
+Numeric features were summarized by mean; categoricals by mode.
+Stroke incidence was analyzed per cluster to identify high-risk groups.
+
+---
+
+**Slide 21: Clustering – Impact of Iterations on Feature Stability**
+
+This slide shows the effect of KMeans iteration counts on feature distribution stability, focusing on heart disease.
+At 100 iterations, cluster centers fluctuated; at 300 iterations, clusters stabilized and traits clarified.
+Sufficient iterations are critical for reliable cluster interpretation.
+
+---
+
+**Slide 22: Clustering – Stroke Risk by Cluster**
+
+We grouped individuals by similar health profiles into risk clusters (high, medium, low).
+KMeans dynamically adjusts centers; max\_iter=300 results were used for interpretation.
+Further details will be expanded in slide 34.
+
+---
+
+**Slide 23: Transition Slide**
+
+---
+
+**Slide 24: Classification – Decision Tree Overview**
+
+We trained a Decision Tree using entropy-based splits to classify stroke occurrence.
+Feature names and scaled values were decoded and reverted for clear rule interpretation.
+Tree visualization displays splits, sample counts, and entropy.
+Key predictors were age, average glucose, and BMI.
+Model achieved 94.9% accuracy under optimal parameters.
+
+---
+
+**Slide 25: Classification – Model Training & Parameters**
+
+Feature importance analysis showed ‘age’, ‘avg\_glucose\_level’, and ‘bmi’ as most influential for stroke prediction.
+Elevated average glucose with hypertension increased stroke risk.
+These rules have practical clinical relevance for risk evaluation and prevention.
+
+---
+
+**Slide 26: Transition Slide**
+
+---
+
+**Slide 27: Evaluation – Model Comparison: XGBoost vs Decision Tree**
+
+Using 10x10 repeated cross-validation, we compared Decision Tree and XGBoost.
+Decision Tree showed stable but lower performance, while XGBoost outperformed across all metrics.
+See detailed results on slide 32.
+
+---
+
+**Slide 28: Evaluation – XGBoost Mechanism & Advantages**
+
+XGBoost sequentially trains trees, correcting previous errors, with regularization to prevent overfitting.
+This results in excellent predictive performance and widespread use in clinical settings.
+(A diagram of the boosting process is displayed.)
+
+---
+
+**Slide 29: Transition Slide**
+
+---
+
+**Slide 30: Evaluation – Cross-validation (10x10 KFold)**
+
+We conducted 10x10 repeated stratified K-Fold cross-validation to assess stability and generalizability.
+GridSearchCV optimized hyperparameters like learning rate and max depth.
+The diagram illustrates the training/validation fold process, balancing bias and variance.
+
+---
+
+**Slide 31: Evaluation – Performance Metrics**
+
+We used five key metrics: Accuracy, Precision, Recall, F1 Score, and ROC AUC to comprehensively evaluate model performance.
+
+---
+
+**Slide 32: Evaluation – Result Analysis**
+
+This slide shows model performance and clustering analysis.
+XGBoost better identified stroke patients in the confusion matrix; Decision Tree over-classified non-stroke cases.
+ROC AUC for XGBoost was about 0.91, Decision Tree about 0.7.
+Elbow and Silhouette plots indicate k=4 as optimal cluster number, guiding strategy development.
+
+---
+
+**Slide 33: Transition Slide**
+
+---
+
+**Slide 34: Strategy & Interpretation – Cluster-Specific Prevention Recommendations**
+
+Based on clusters, we recommend tailored prevention:
+Cluster 0 (elderly) requires 3-month health monitoring.
+Cluster 1 (high glucose and BMI) needs lifestyle modification and screening.
+Cluster 3 is stable but benefits from lifestyle changes.
+Cluster 4 (children/young adults) needs basic health maintenance.
+Detailed cluster traits inform effective preventive strategies.
+
+---
+
+**Slide 35: Team Roles and Reflections**
+
+Roles:
+Seohyun Kyo - Data preprocessing
+Subin An - Clustering analysis
+Wonjun Kim - Classification modeling and evaluation
+Heejae Chae - Workflow integration and presentation
+Collaboration enhanced project quality.
+
+Reflections:
+Subin deepened understanding of supervised vs unsupervised learning.
+Seohyun appreciated preprocessing importance and hands-on experience.
+Wonjun learned model selection and evaluation significance.
+Heejae completed the data analysis journey through project experience.
+
+---
+
+**Slide 36: Limitations, Q\&A & Summary**
+
+Key points summarized:
+
+* XGBoost excels by combining multiple trees to reduce error and overfitting, improving accuracy.
+* Four clusters were chosen based on clear separation indicated by Elbow and Silhouette methods.
+* SMOTE addressed class imbalance, enhancing minority class learning.
+* The project was systematically conducted in order: preprocessing, clustering, and predictive modeling.
+
+---
+
+**Slide 37: Closing Slide**
+
+Finally, here is our GitHub link and reference materials.
+Thank you for your attention. This concludes the presentation by Team 8, StrokeSight.
+
+---
+
+필요하면 추가 편집 및 확장 요청해 주세요!
